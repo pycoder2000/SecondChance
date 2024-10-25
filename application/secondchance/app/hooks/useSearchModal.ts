@@ -2,8 +2,8 @@ import { create } from "zustand";
 
 export type SearchQuery = {
     country: string | undefined;
-    checkIn: Date | undefined;
-    checkOut: Date | undefined;
+    startDate: Date | undefined;
+    endDate: Date | undefined;
     category: string | undefined;
     priceMin: number | undefined;
     priceMax: number | undefined;
@@ -27,8 +27,8 @@ const useSearchModal = create<SearchModalStore>((set) => ({
     setQuery: (query: SearchQuery) => set({ query: query }),
     query: {
         country: '',
-        checkIn: undefined,
-        checkOut: undefined,
+        startDate: undefined,
+        endDate: undefined,
         category: '',
         priceMin: undefined,
         priceMax: undefined,

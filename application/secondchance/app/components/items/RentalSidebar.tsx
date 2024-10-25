@@ -119,7 +119,7 @@ const RentalSidebar: React.FC<RentalSidebarProps> = ({
 
     return (
         <aside className="mt-6 p-6 col-span-2 rounded-xl border border-gray-300 shadow-xl">
-            <h2 className="mb-5 text-2xl">${item.rental_price} per day</h2> {/* Updated to "per day" for items */}
+            <h2 className="mb-5 text-2xl">${item.rental_price} per day</h2>
 
             <DatePicker
                 value={dateRange}
@@ -128,7 +128,7 @@ const RentalSidebar: React.FC<RentalSidebarProps> = ({
             />
 
             <div className="mb-6 p-3 border border-gray-400 rounded-xl">
-                <label className="mb-2 block font-bold text-xs">Quantity</label> {/* Changed "Guests" to "Quantity" */}
+                <label className="mb-2 block font-bold text-xs">Quantity</label>
 
                 <select
                     value={quantity}

@@ -26,8 +26,8 @@ const SearchModal = () => {
     const closeAndSearch = () => {
         const newSearchQuery: SearchQuery = {
             country: country?.label,
-            checkIn: dateRange.startDate,
-            checkOut: dateRange.endDate,
+            startDate: dateRange.startDate,
+            endDate: dateRange.endDate,
             category: condition,
             priceMin: priceMin ? parseInt(priceMin) : undefined,
             priceMax: priceMax ? parseInt(priceMax) : undefined,
@@ -39,9 +39,9 @@ const SearchModal = () => {
     }
 
     const _setDateRange = (selection: Range) => {
-        if (searchModal.step === 'checkin') {
-            searchModal.open('checkout');
-        } else if (searchModal.step === 'checkout') {
+        if (searchModal.step === 'startdate') {
+            searchModal.open('enddate');
+        } else if (searchModal.step === 'enddate') {
             searchModal.open('details');
         }
 
@@ -60,13 +60,13 @@ const SearchModal = () => {
             <div className="mt-6 flex flex-row gap-4">
                 <CustomButton
                     label="Select pickup date ->"
-                    onClick={() => searchModal.open('checkin')}
+                    onClick={() => searchModal.open('startdate')}
                 />
             </div>
         </>
     )
 
-    const contentCheckin = (
+    const contentStartDate = (
         <>
             <h2 className="mb-6 text-2xl">When do you need the item?</h2>
 
@@ -83,13 +83,13 @@ const SearchModal = () => {
 
                 <CustomButton
                     label="Return date ->"
-                    onClick={() => searchModal.open('checkout')}
+                    onClick={() => searchModal.open('enddate')}
                 />
             </div>
         </>
     )
 
-    const contentCheckout = (
+    const contentenddate = (
         <>
             <h2 className="mb-6 text-2xl">When will you return the item?</h2>
 
@@ -101,7 +101,7 @@ const SearchModal = () => {
             <div className="mt-6 flex flex-row gap-4">
                 <CustomButton
                     label="<- Pickup date"
-                    onClick={() => searchModal.open('checkin')}
+                    onClick={() => searchModal.open('startdate')}
                 />
 
                 <CustomButton
@@ -154,7 +154,7 @@ const SearchModal = () => {
             <div className="mt-6 flex flex-row gap-4">
                 <CustomButton
                     label="<- Return date"
-                    onClick={() => searchModal.open('checkout')}
+                    onClick={() => searchModal.open('enddate')}
                 />
 
                 <CustomButton
@@ -167,10 +167,10 @@ const SearchModal = () => {
 
     if (searchModal.step === 'location') {
         content = content;
-    } else if (searchModal.step === 'checkin') {
-        content = contentCheckin;
-    } else if (searchModal.step === 'checkout') {
-        content = contentCheckout;
+    } else if (searchModal.step === 'startdate') {
+        content = contentStartDate;
+    } else if (searchModal.step === 'enddate') {
+        content = contentenddate;
     } else if (searchModal.step === 'details') {
         content = contentDetails;
     }

@@ -7,39 +7,39 @@ import { useEffect, useState } from 'react';
 import ListSingleItem from "./ListSingleItem";
 
 export type ItemType = {
-    id: string;
-    title: string;
-    image_url: string;
-    rental_price: number;
-    is_favorite: boolean;
-    category: string;
-    condition: string;
-    location: string;
+  id: string;
+  title: string;
+  image_url: string;
+  rental_price: number;
+  is_favorite: boolean;
+  category: string;
+  condition: string;
+  location: string;
 };
 
 interface ItemListProps {
-    owner_id?: string | null;
-    favorites?: boolean | null;
+  owner_id?: string | null;
+  favorites?: boolean | null;
 }
 
 const ItemList: React.FC<ItemListProps> = ({
-    owner_id,
-    favorites
+  owner_id,
+  favorites
 }) => {
-    const params = useSearchParams();
-    const searchModal = useSearchModal();
+  const params = useSearchParams();
+  const searchModal = useSearchModal();
 
-    const country = searchModal.query.country;
-    const category = searchModal.query.category;
-    const priceMin = searchModal.query.priceMin;
-    const priceMax = searchModal.query.priceMax;
-    const condition = searchModal.query.condition;
+  const country = searchModal.query.country;
+  const category = searchModal.query.category;
+  const priceMin = searchModal.query.priceMin;
+  const priceMax = searchModal.query.priceMax;
+  const condition = searchModal.query.condition;
 
-    const [items, setItems] = useState<ItemType[]>([]);
+  const [items, setItems] = useState<ItemType[]>([]);
 
     console.log('searchQuery:', searchModal.query);
 
-    const markFavorite = (id: string, is_favorite: boolean) => {
+  const markFavorite = (id: string, is_favorite: boolean) => {
         const updatedItems = items.map((item: ItemType) => {
             if (item.id === id) {
                 item.is_favorite = is_favorite;
@@ -49,17 +49,17 @@ const ItemList: React.FC<ItemListProps> = ({
         });
 
         setItems(updatedItems);
-    };
+  };
 
-    const getItems = async () => {
-        let url = '/api/items/';
+  const getItems = async () => {
+    let url = '/api/items/';
 
-        if (owner_id) {
-            url += `?owner_id=${owner_id}`;
-        } else if (favorites) {
-            url += '?is_favorites=true';
-        } else {
-            let urlQuery = '';
+    if (owner_id) {
+      url += `?owner_id=${owner_id}`;
+    } else if (favorites) {
+      url += '?is_favorites=true';
+    } else {
+      let urlQuery = '';
 
             if (country) {
                 urlQuery += `&country=${encodeURIComponent(country)}`;
@@ -81,40 +81,48 @@ const ItemList: React.FC<ItemListProps> = ({
                 urlQuery += `&condition=${encodeURIComponent(condition)}`;
             }
 
-            if (urlQuery.length) {
+      if (urlQuery.length) {
                 console.log('Query:', urlQuery);
-                urlQuery = '?' + urlQuery.substring(1);
-                url += urlQuery;
-            }
-        }
+        urlQuery = '?' + urlQuery.substring(1);
+        url += urlQuery;
+      }
+    }
 
-        try {
-            const response = await apiService.get(url);
-            const fetchedItems = response.data.map((item: ItemType) => {
-                item.is_favorite = response.favorites.includes(item.id);
-                return item;
-            });
-            setItems(fetchedItems);
-        } catch (error) {
-            console.error('Error fetching items:', error);
-        }
-    };
+    try {
+      const response = await apiService.get(url);
+      if (response.data && Array.isArray(response.data)) {
+        const fetchedItems = response.data.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          image_url: item.image_url,
+          rental_price: item.rental_price,
+          is_favorite: response.favorites.includes(item.id),
+          category: item.category,
+          condition: item.condition,
+          location: item.location,
+        }));
+        setItems(fetchedItems);
+      }
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  };
 
-    useEffect(() => {
-        getItems();
-    }, [category, country, priceMin, priceMax, condition, searchModal.query, params]);
+  useEffect(() => {
+    getItems();
+  }, [category, country, priceMin, priceMax, condition, searchModal.query, params]);
 
-    return (
-        <>
-            {items.map((item) => (
-                <ListSingleItem
-                    key={item.id}
-                    item={item}
-                    markFavorite={(is_favorite: boolean) => markFavorite(item.id, is_favorite)}
-                />
-            ))}
-        </>
-    );
+  return (
+    <>
+      {items.map((item) => (
+        <ListSingleItem
+          key={item.id}
+          item={item}
+          markFavorite={(is_favorite: boolean) => markFavorite(item.id, is_favorite)}
+        />
+      ))}
+    </>
+  );
 };
 
 export default ItemList;

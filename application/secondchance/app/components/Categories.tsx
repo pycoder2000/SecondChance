@@ -13,8 +13,8 @@ const Categories = () => {
 
         const query: SearchQuery = {
             country: searchModal.query.country,
-            checkIn: searchModal.query.checkIn,
-            checkOut: searchModal.query.checkOut,
+            startDate: searchModal.query.startDate,
+            endDate: searchModal.query.endDate,
             priceMin: searchModal.query.priceMin,
             priceMax: searchModal.query.priceMax,
             condition: searchModal.query.condition,
